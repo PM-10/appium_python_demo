@@ -3,14 +3,9 @@ pipeline {
 
     tools {nodejs "nodejs"}
     stages {
-        stage('git_clone') {
+        stage('setup_project') {
             steps {
-                git('clone https://github.com/PM-10/appium_python_demo.git')
-            }
-        }
-        stage('setup_npm') {
-            steps {
-                sh('npm install')
+                sh('git -C appium_python_demo pull origin main && cd appium_python_demo && npm install')
             }
         }
         stage('setup_appium') {
@@ -21,7 +16,7 @@ pipeline {
                     } catch(e){
                         echo "${e.toString()}"
                     } finally{
-                        sleep(5)
+                        sleep(3)
                     }
                 }
             }
@@ -30,7 +25,7 @@ pipeline {
             steps {
                 script{
                      try{
-                        sh('pm2 start emulator.js')
+                        sh('pm2 restart appium_python_demo/emulator.js')
                     } catch(e){
                         echo "${e.toString()}"
                     }
@@ -40,7 +35,7 @@ pipeline {
         }
         stage('unit_test') {
             steps {
-                sh('python3 demo.py')
+                sh('python3 appium_python_demo/demo.py')
             }
         }
 

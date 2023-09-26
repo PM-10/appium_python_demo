@@ -9,6 +9,8 @@ capabilities = dict(
     deviceName='Android',
     appPackage='com.android.settings',
     appActivity='.Settings',
+    forceAppLaunch=True,
+    noReset=True,
 )
 
 appium_server_url = 'http://localhost:4723'
