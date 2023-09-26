@@ -33,7 +33,7 @@ pipeline {
 
             }
         }
-        stage('unit_test') {
+        stage('run_test') {
             steps {
                 sh('python3 demo.py')
             }
