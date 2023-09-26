@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    tools {nodejs "nodejs"}
+    stages {
+        stage('git_clone') {
+            steps {
+                git('clone https://github.com/PM-10/appium_python_demo.git')
+            }
+        }
+        stage('setup_npm') {
+            steps {
+                sh('npm install')
+            }
+        }
+        stage('setup_appium') {
+            steps {
+                script{
+                    try{
+                        sh('pm2 start appium')
+                    } catch(e){
+                        echo "${e.toString()}"
+                    } finally{
+                        sleep(5)
+                    }
+                }
+            }
+        }
+        stage('setup_emulator') {
+            steps {
+                script{
+                     try{
+                        sh('pm2 start emulator.js')
+                    } catch(e){
+                        echo "${e.toString()}"
+                    }
+                }
+
+            }
+        }
+        stage('unit_test') {
+            steps {
+                sh('python3 demo.py')
+            }
+        }
+
+    }
+}
